@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:freerasp/talsec_app.dart';
-import 'package:freerasp/talsec_callback.dart';
-import 'package:freerasp/talsec_config.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:tbib_splash_screen/splash_screen_view.dart';
 
@@ -91,64 +88,9 @@ class _SplashState extends State<Splash> {
   @override
   void initState() {
     super.initState();
-    initSecurityState();
   }
 
-  Future<void> initSecurityState() async {
-    /// Provide TalsecConfig your expected data and then use them in TalsecApp
-    final config = TalsecConfig(
-      /// For Android
-      androidConfig: AndroidConfig(
-        expectedPackageName: 'com.example.starshmucks',
-        expectedSigningCertificateHashes: [
-          'IeGzNncF55vbtV+8D2a/GmK4xNzsjJTAiDT/tlHjTd0='
-        ],
-      ),
 
-
-      watcherMail: 'sanish.aukhale@srijan.net',
-    );
-
-    /// Callbacks thrown by library
-    final callback = TalsecCallback(
-      /// For Android
-      androidCallback: AndroidCallback(
-        onRootDetected: () => _updateState(_root),
-        onEmulatorDetected: () => _updateState(_emulator),
-        onHookDetected: () => _updateState(_hook),
-        onTamperDetected: () => _updateState(_tamper),
-        onDeviceBindingDetected: () => _updateState(_deviceBinding),
-        onUntrustedInstallationDetected: () => _updateState(_untrustedSource),
-      ),
-
-      /// For iOS
-      iosCallback: IOSCallback(
-        onSignatureDetected: () => _updateState(_signature),
-        onRuntimeManipulationDetected: () => _updateState(_runtimeManipulation),
-        onJailbreakDetected: () => _updateState(_jailbreak),
-        onPasscodeDetected: () => _updateState(_passcode),
-        onSimulatorDetected: () => _updateState(_simulator),
-        onMissingSecureEnclaveDetected: () =>
-            _updateState(_missingSecureEnclave),
-        onDeviceChangeDetected: () => _updateState(_deviceChange),
-        onDeviceIdDetected: () => _updateState(_deviceId),
-        onUnofficialStoreDetected: () => _updateState(_unofficialStore),
-      ),
-
-      /// Debugger is common for both platforms
-      onDebuggerDetected: () => _updateState(_debugger),
-    );
-
-    final app = TalsecApp(
-      config: config,
-      callback: callback,
-    );
-
-    /// Turn on freeRASP
-    app.start();
-
-    if (!mounted) return;
-  }
 
   void _updateState(ThreatType type) {
     setState(type.threatFound);
